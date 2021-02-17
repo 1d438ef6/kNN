@@ -121,80 +121,7 @@ public class Netz {
      *      ArrayList<DataPoint>
      */
     public ArrayList<DataPoint> getNeighbours(DataPoint dp, int n){
-        ArrayList<DataPoint> arr = this.dp;
-        arr.remove(dp);
-        ArrayList<DataPoint> ret = new ArrayList<DataPoint>();
-        ArrayList<Double> dist = new ArrayList<Double>();
-        for(int i = 0; i<this.dp.size(); i++){
-            dist.add(dp.dist(arr.get(i), "euklid"));
-        }
-        boolean sorted = false;
-        double h1 = 0;
-        DataPoint h2;
-        while(!sorted){
-            sorted = true;
-            for(int i = 0; i<dist.size()-1;i++){
-                if(dist.get(i) > dist.get(i+1)){
-                    h1 = dist.get(i);
-                    dist.set(i, dist.get(i+1));
-                    dist.set(i+1, h1);
-                    h2 = arr.get(i);
-                    arr.set(i, arr.get(i+1));
-                    arr.set(i+1, h2);
-                    sorted = false;
-                }
-            }
-        }
-        for(int i = 0; i<n; i++){
-            ret.add(arr.get(i));
-        }
-        return ret;
-    }
-
-    /**
-     * gibt den nächsten nutzbaren Punkt zu dp zurück
-     * @param dp
-     *      DataPoint
-     * @return
-     *      DataPoint
-     */
-    public ArrayList<DataPoint> getNextUseableNeighbours(DataPoint dp, int n){
-
-        ArrayList<DataPoint> arrtemp = new ArrayList<>();
-        arrtemp = (ArrayList<DataPoint>) this.dp.clone();
-        arrtemp.remove(dp);
-        ArrayList<DataPoint> arr = new ArrayList<>();
-        for(int i = 0; i<arrtemp.size(); i++){
-            if(arrtemp.get(i).isUseable()){
-                arr.add(arrtemp.get(i));
-            }
-        }
-        ArrayList<Double> dist = new ArrayList<Double>();
-        for(int i = 0; i<arr.size(); i++){
-            dist.add(dp.dist(arr.get(i), "euklid"));
-        }
-        boolean sorted = false;
-        double h1 = 0;
-        DataPoint h2;
-        while(!sorted){
-            sorted = true;
-            for(int i = 0; i<dist.size()-1;i++){
-                if(dist.get(i) > dist.get(i+1)){
-                    h1 = dist.get(i);
-                    dist.set(i, dist.get(i+1));
-                    dist.set(i+1, h1);
-                    h2 = arr.get(i);
-                    arr.set(i, arr.get(i+1));
-                    arr.set(i+1, h2);
-                    sorted = false;
-                }
-            }
-        }
-        ArrayList<DataPoint> ret = new ArrayList<>();
-        for(int i = 0; i<n; i++){
-            ret.add(arr.get(i));
-        }
-        return ret;
+        return this.getNeighbours(dp, n, "euklid");
     }
 
     /**
@@ -246,45 +173,14 @@ public class Netz {
     }
 
     /**
-     * gibt den nächsten nutzbaren nachbarn aus
+     * gibt den nächsten nutzbaren Punkt zu dp zurück
      * @param dp
      *      DataPoint
      * @return
-     *      Datapoint
+     *      DataPoint
      */
-    public DataPoint getNextUseableNeighbour(DataPoint dp){
-
-        ArrayList<DataPoint> arrtemp = new ArrayList<>();
-        arrtemp = (ArrayList<DataPoint>) this.dp.clone();
-        arrtemp.remove(dp);
-        ArrayList<DataPoint> arr = new ArrayList<>();
-        for(int i = 0; i<arrtemp.size(); i++){
-            if(arrtemp.get(i).isUseable()){
-                arr.add(arrtemp.get(i));
-            }
-        }
-        ArrayList<Double> dist = new ArrayList<Double>();
-        for(int i = 0; i<arr.size(); i++){
-            dist.add(dp.dist(arr.get(i), "euklid"));
-        }
-        boolean sorted = false;
-        double h1 = 0;
-        DataPoint h2;
-        while(!sorted) {
-            sorted = true;
-            for (int i = 0; i < dist.size() - 1; i++) {
-                if (dist.get(i) > dist.get(i + 1)) {
-                    h1 = dist.get(i);
-                    dist.set(i, dist.get(i + 1));
-                    dist.set(i + 1, h1);
-                    h2 = arr.get(i);
-                    arr.set(i, arr.get(i + 1));
-                    arr.set(i + 1, h2);
-                    sorted = false;
-                }
-            }
-        }
-        return arr.get(0);
+    public ArrayList<DataPoint> getNextUseableNeighbours(DataPoint dp, int n){
+        return this.getNextUseableNeighbours(dp, n, "euklid");
     }
 
     /**
@@ -329,6 +225,17 @@ public class Netz {
             }
         }
         return arr.get(0);
+    }
+
+    /**
+     * gibt den nächsten nutzbaren nachbarn aus
+     * @param dp
+     *      DataPoint
+     * @return
+     *      Datapoint
+     */
+    public DataPoint getNextUseableNeighbour(DataPoint dp){
+        return this.getNextUseableNeighbour(dp, "euklid");
     }
 
     //-----edit data set------
@@ -521,101 +428,11 @@ public class Netz {
     }
 
     public void classify(int k, boolean weighted){
-        if(weighted){
-            //anzahl der Durchläufe
-            int i = 0;
-            //solange nicht komplett klassifiziert wurde wiederholen
-            while (!isClassified() && i<10){
-                //alle Datenpunkte durchlaufen
-                for(int j = 0; j<this.dp.size(); j++){
-                    //wenn datenpunkt unklassifiziert
-                    if(this.dp.get(j).getPointClass() == 0){
-                        //Liste mit den k nächsten Nachbarn
-                        ArrayList<DataPoint> nn = this.getNextUseableNeighbours(this.dp.get(j), k);
-                        //Liste für die distanzen der Punkte
-                        ArrayList<Double> dist = new ArrayList<>();
-                        //array für die gewichteten Distanzen
-                        //sortiert nach Klassen
-                        ArrayList<Double> weighted_dist = new ArrayList<>();
-                        //Alle Klassen in den Nächsten Nachbarn
-                        Counter c = this.getNPointClasses(nn);
-                        int h1 = c.getX().get(0);
-                        //maximale Klasse besimmen
-                        for (int i2 = 0; i2<c.getX().size(); i2++){
-                            if(c.getX().get(i2) > h1){
-                                h1 = c.getX().get(i2);
-                            }
-                        }
-                        for (int i2 = 0; i2<=h1; i2++){
-                            //befüllen der gewichteten Distanzen
-                            weighted_dist.add(0.0);
-                        }
-                        for(int i2 = 0; i2<nn.size(); i2++){
-                            //Distanzen berechnen
-                            dist.add(this.dp.get(j).dist(nn.get(i2), "euklid"));
-                        }
-                        for(int i2 = 0; i2<nn.size(); i2++){
-                            //Gewichtsformel
-                            //if dk != d1 : (dk-di)/(dk-d1)
-                            //else : 1
-                            if(dist.get(k-1) == dist.get(0)){
-                                weighted_dist.set(nn.get(i2).getPointClass(), weighted_dist.get(nn.get(i2).getPointClass())+(1));
-                            } else {
-                                weighted_dist.set(nn.get(i2).getPointClass(),
-                                        weighted_dist.get(nn.get(i2).getPointClass())+
-                                                (((dist.get(k-1) - dist.get(i2)))
-                                                        / (dist.get(k-1) - dist.get(0))));
-                            }
-                        }
-                        //hilfsvariablen
-                        h1 = 0;
-                        double h2 = weighted_dist.get(0);
-                        //maximum in weighted_dist besimmen
-                        for (int i2 = 0; i2<weighted_dist.size(); i2++){
-                            if(weighted_dist.get(i2) > h2){
-                                h2 = weighted_dist.get(i2);
-                                h1 = i2;
-                            }
-                        }
-                        //Klasse des Punktes setzen
-                        this.dp.get(j).setPointClass(h1);
-                    }
-                }
-                //anzahl Durchläufe inkrementieren
-                i++;
-            }
-        } else {
-            int i = 0;
-            while (!isClassified() && i<10){
-                for(int j = 0; j<this.dp.size(); j++){
-                    if(this.dp.get(j).getPointClass() == 0){
-                        ArrayList<DataPoint> nn = this.getNextUseableNeighbours(this.dp.get(j), k);
-                        Counter c = this.getNPointClasses(nn);
-                        c.sort();
-                        this.dp.get(j).setPointClass(c.getX().get(0));
-                    }
-                }
-                i++;
-            }
-        }
+        this.classify(k, weighted, "euklid");
     }
 
     public void classify(int k){
-        int i = 0;
-        while (!isClassified() && i<10){
-            for(int j = 0; j<this.dp.size(); j++){
-                if(this.dp.get(j).getPointClass() == 0){
-                    ArrayList<DataPoint> nn = this.getNextUseableNeighbours(this.dp.get(j), k);
-                    Counter c = this.getNPointClasses(nn);
-                    c.sort();
-                    this.dp.get(j).setPointClass(c.getX().get(0));
-                }
-            }
-            i++;
-        }
-        if(!isClassified()){
-            System.err.println("Unable to classify");
-        }
+        this.classify(k, false);
     }
 
     public boolean isClassified(){

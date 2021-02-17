@@ -30,7 +30,7 @@ public class Main {
 
         n.removeDoubles();
         System.out.println(n.toString());
-        n.classify(3, true);
+        n.classify(3);
         System.out.println(n.toString());
     }
 }
