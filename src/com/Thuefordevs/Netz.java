@@ -249,6 +249,36 @@ public class Netz {
         return this.dp.size();
     }
 
+    public double getMaxCoordinate(int x){
+        if (x > this.dim){
+            System.err.println("The maximum you can ask for is:" + this.dim);
+        }
+        double h = this.dp.get(0).getValues()[x];
+        for(DataPoint d : this.dp){
+            if(d.getValues()[x] > h){
+                h = d.getValues()[x];
+            }
+        }
+        return h;
+    }
+
+    public double getMinCoordinate(int x){
+        if (x > this.dim){
+            System.err.println("The maximum you can ask for is:" + this.dim);
+        }
+        double h = this.dp.get(0).getValues()[x];
+        for(DataPoint d : this.dp){
+            if(d.getValues()[x] < h){
+                h = d.getValues()[x];
+            }
+        }
+        return h;
+    }
+
+    public ArrayList<DataPoint> getPoints(){
+        return this.dp;
+    }
+
     //-----edit data set------
 
     /**
@@ -459,10 +489,20 @@ public class Netz {
 
     //--------show Data---------
 
+    /**
+     * zeichne die Koordinaten d1 und d2 in ein Koordinatensystem
+     * @param d1
+     *      integer
+     * @param d2
+     *      integer
+     */
     public void draw(int d1, int d2){
         DrawN.draw(this, d1, d2);
     }
 
+    /**
+     * zeichne die ersten beiden koordinaten in ein Koordinatensystem
+     */
     public void draw(){
         this.draw(0, 1);
     }
