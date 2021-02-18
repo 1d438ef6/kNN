@@ -142,7 +142,7 @@ public class Netz {
         arrtemp.remove(dp);
         ArrayList<DataPoint> arr = new ArrayList<>();
         for(int i = 0; i<arrtemp.size(); i++){
-            if(arrtemp.get(i).isUseable()){
+            if(arrtemp.get(i).isUseable() && arrtemp.get(i).getPointClass() != 0){
                 arr.add(arrtemp.get(i));
             }
         }
@@ -201,7 +201,7 @@ public class Netz {
         arrtemp.remove(dp);
         ArrayList<DataPoint> arr = new ArrayList<>();
         for(int i = 0; i<arrtemp.size(); i++){
-            if(arrtemp.get(i).isUseable()){
+            if(arrtemp.get(i).isUseable() && arrtemp.get(i).getPointClass() != 0){
                 arr.add(arrtemp.get(i));
             }
         }
@@ -393,7 +393,7 @@ public class Netz {
             //anzahl der Durchläufe
             int i = 0;
             //solange nicht komplett klassifiziert wurde wiederholen
-            while (!isClassified() && i<10){
+            while (!isClassified() /*&& i<100*/){
                 //alle Datenpunkte durchlaufen
                 for(int j = 0; j<this.dp.size(); j++){
                     //wenn datenpunkt unklassifiziert
@@ -405,6 +405,7 @@ public class Netz {
                         //array für die gewichteten Distanzen
                         //sortiert nach Klassen
                         ArrayList<Double> weighted_dist = new ArrayList<>();
+                        ArrayList<Integer> weighted_dist_PClasses = new ArrayList<>();
                         //Alle Klassen in den Nächsten Nachbarn
                         Counter c = this.getNPointClasses(nn);
                         int h1 = c.getX().get(0);
@@ -436,7 +437,7 @@ public class Netz {
                             }
                         }
                         //hilfsvariablen
-                        h1 = 0;
+                        h1 = 7;
                         double h2 = weighted_dist.get(0);
                         //maximum in weighted_dist besimmen
                         for (int i2 = 0; i2<weighted_dist.size(); i2++){
@@ -447,6 +448,8 @@ public class Netz {
                         }
                         //Klasse des Punktes setzen
                         this.dp.get(j).setPointClass(h1);
+                        System.out.println(j + ": klassifikiert");
+                        nn.clear(); dist.clear(); weighted_dist.clear();
                     }
                 }
                 //anzahl Durchläufe inkrementieren

@@ -30,6 +30,8 @@ public class DrawN extends Application {
 
     static public void draw(Netz n, int d1, int d2){
         ArrayList<DataPoint> dp = n.getPoints();
+        double MaxX = n.getMaxCoordinate(d1);
+        double MaxY = n.getMaxCoordinate(d2);
         int width = 400; int height = 400;
         if(n.getMinCoordinate(d1) >= 0 && n.getMinCoordinate(d2) >= 0){
                 width = (int) (width * (n.getMaxCoordinate(d1)/n.getMaxCoordinate(d2))) + 50;
@@ -42,8 +44,11 @@ public class DrawN extends Application {
         Circle[] circles = new Circle[n.getDataSetSize()];
         int i = 0;
         for (DataPoint d : dp){
-            circles[i] = new Circle((d.getValues()[d1]*(width/dp.size()))+50, height - ((d.getValues()[d2]*(height/dp.size()))+50), 5, col[d.getPointClass()%col_size]);
-            p.getChildren().add(circles[i]);
+            if(d.isUseable()){
+                circles[i] = new Circle((d.getValues()[d1]*(width/MaxX))+50, height - ((d.getValues()[d2]*(height/MaxY))+50), 5, col[d.getPointClass()%col_size]);
+                p.getChildren().add(circles[i]);
+            }
+
             i++;
         }
 
