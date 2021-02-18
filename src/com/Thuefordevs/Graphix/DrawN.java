@@ -32,20 +32,35 @@ public class DrawN extends Application {
         ArrayList<DataPoint> dp = n.getPoints();
         double MaxX = n.getMaxCoordinate(d1);
         double MaxY = n.getMaxCoordinate(d2);
+        double x0 = 0; double y0 = 0;
         int width = 400; int height = 400;
-        if(n.getMinCoordinate(d1) >= 0 && n.getMinCoordinate(d2) >= 0){
-                width = (int) (width * (n.getMaxCoordinate(d1)/n.getMaxCoordinate(d2))) + 50;
-                height = (int) (height * (n.getMaxCoordinate(d2)/n.getMaxCoordinate(d1))) + 50;
+        if(n.getMinCoordinate(d1) >= 0 && n.getMinCoordinate(d2) >= 0) {
+            width = (int) (width * (n.getMaxCoordinate(d1) / n.getMaxCoordinate(d2))) + 50;
+            height = (int) (height * (n.getMaxCoordinate(d2) / n.getMaxCoordinate(d1))) + 50;
+            x0 = 0; y0 = 0;
+        } else if(n.getMinCoordinate(d1) < 0 && n.getMinCoordinate(d2) >= 0){
+            //width = (int) (width * ((Math.abs(n.getMinCoordinate(d1)) + n.getMaxCoordinate(d1))/(Math.abs(n.getMinCoordinate(d2) + n.getMaxCoordinate(d2))))) + 50;
+            //height = (int) (height * (n.getMaxCoordinate(d2) / n.getMaxCoordinate(d1))) + 50;
+            x0 = Math.abs(n.getMinCoordinate(d1))*(width/MaxX); y0 = 0;
+        } else if(n.getMinCoordinate(d1) >= 0 && n.getMinCoordinate(d2) < 0){
+            //width = (int) (width * (n.getMaxCoordinate(d1) / n.getMaxCoordinate(d2))) + 50;
+            //height = (int) (height * ((Math.abs(n.getMinCoordinate(d2)) + n.getMaxCoordinate(d2))/(Math.abs(n.getMinCoordinate(d1) + n.getMaxCoordinate(d1))))) + 50;
+            x0 = 0; y0 = Math.abs(n.getMinCoordinate(d2))*(height/MaxY);
+        } else if (n.getMinCoordinate(d1) < 0 && n.getMinCoordinate(d2) < 0){
+            //width = (int) (width * ((Math.abs(n.getMinCoordinate(d1)) + n.getMaxCoordinate(d1))/(Math.abs(n.getMinCoordinate(d2) + n.getMaxCoordinate(d2))))) + 50;
+            //height = (int) (height * ((Math.abs(n.getMinCoordinate(d2)) + n.getMaxCoordinate(d2))/(Math.abs(n.getMinCoordinate(d1) + n.getMaxCoordinate(d1))))) + 50;
+            x0 = Math.abs(n.getMinCoordinate(d1))*(width/MaxX); y0 = Math.abs(n.getMinCoordinate(d2))*(height/MaxY);
         }
+        System.out.println(x0 + " : " + y0);
         Pane p = new Pane();
-        Line xachse = new Line(0, height-50, width, height-50);
-        Line yachse = new Line(50, 0, 50, height);
+        Line xachse = new Line(0, height-50+y0, width, height-50+y0);
+        Line yachse = new Line(50+x0, 0, 50+x0, height);
         p.getChildren().addAll(xachse, yachse);
         Circle[] circles = new Circle[n.getDataSetSize()];
         int i = 0;
         for (DataPoint d : dp){
             if(d.isUseable()){
-                circles[i] = new Circle((d.getValues()[d1]*(width/MaxX))+50, height - ((d.getValues()[d2]*(height/MaxY))+50), 5, col[d.getPointClass()%col_size]);
+                circles[i] = new Circle((d.getValues()[d1]*(width/MaxX))+50+x0, height - ((d.getValues()[d2]*(height/MaxY))+50) +y0, 5, col[d.getPointClass()%col_size]);
                 p.getChildren().add(circles[i]);
             }
 
