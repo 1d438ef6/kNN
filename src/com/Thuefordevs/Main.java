@@ -9,7 +9,7 @@ public class Main {
 	// write your code here
         DataPoint a0 = new DataPoint(new double[]{1, 2});
         DataPoint a1 = new DataPoint(new double[]{7, 5}, 2);
-        DataPoint a2 = new DataPoint(new double[]{-1, 3}, 2);
+        DataPoint a2 = new DataPoint(new double[]{1, 3}, 2);
         DataPoint a3 = new DataPoint(new double[]{4, 4}, 2);
         DataPoint a4 = new DataPoint(new double[]{1, 4}, 1);
         DataPoint a5 = new DataPoint(new double[]{3, 4});
@@ -44,8 +44,10 @@ public class Main {
         }
         //n.draw();
         n.classify(7);
+        n.removeTomekLinks();
         System.out.println(n.toString());
         System.out.println(n.getPointClasses());
+        System.out.println(n.getUseablePointClasses());
         n.draw();
     }
 }
