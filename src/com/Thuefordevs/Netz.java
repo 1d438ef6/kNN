@@ -1,5 +1,7 @@
 package com.Thuefordevs;
 
+import com.Thuefordevs.Graphix.DrawN;
+
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -238,6 +240,15 @@ public class Netz {
         return this.getNextUseableNeighbour(dp, "euklid");
     }
 
+    /**
+     * gibt die Anzahl der Punkte des Netzes zurück
+     * @return
+     *      int
+     */
+    public int getDataSetSize(){
+        return this.dp.size();
+    }
+
     //-----edit data set------
 
     /**
@@ -444,6 +455,18 @@ public class Netz {
         }
         return ret;
     }
+
+
+    //--------show Data---------
+
+    public void draw(int d1, int d2){
+        DrawN.draw(this, d1, d2);
+    }
+
+    public void draw(){
+        this.draw(0, 1);
+    }
+
 
     @Override
     public String toString() {
