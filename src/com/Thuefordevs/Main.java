@@ -29,9 +29,9 @@ public class Main {
 
         arr.add(a7);
 
-        /*for(int i = 0; i<100; i++){
+        for(int i = 0; i<100; i++){
             arr.add(new DataPoint(new double[]{Math.random()*15, Math.random()*10}, (int)(Math.random()*3)));
-        }*/
+        }
 
         Netz n = new Netz(arr);
 

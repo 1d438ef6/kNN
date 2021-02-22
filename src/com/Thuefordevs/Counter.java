@@ -6,15 +6,22 @@ public class Counter {
     private ArrayList<Integer> x;
     private ArrayList<Integer> y;
 
+    /**
+     * neues Counter Objekt
+     */
     public Counter(){
         this.x = new ArrayList<>();
         this.y = new ArrayList<>();
     }
 
+    /**
+     * addiere parameter x zum counter
+     * @param x
+     *      int
+     */
     public void add(int x){
-        int i = 0;
         boolean drin = false;
-        for (i = 0; i<this.x.size(); i++){
+        for (int i = 0; i<this.x.size(); i++){
             if (x == this.x.get(i)){
                 this.y.set(i, this.y.get(i)+1);
                 drin = true;
@@ -27,19 +34,35 @@ public class Counter {
         }
     }
 
+    /**
+     * gibt den x - Array zurück
+     * @return
+     *      ArrayList<Integer>
+     */
     public ArrayList<Integer> getX() {
         return x;
     }
 
+    /**
+     * gibt den y - Array zurück
+     * @return
+     *      ArrayList<Integer>
+     */
     public ArrayList<Integer> getY() {
         return y;
     }
 
+    /**
+     * leere Counter
+     */
     public void delete(){
         this.x.clear();
         this.y.clear();
     }
 
+    /**
+     * sortiere Counter absteigend nach Array y
+     */
     public void sort(){
         boolean sorted = false;
         int h1 = 0;

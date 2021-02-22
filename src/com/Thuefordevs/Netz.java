@@ -3,7 +3,6 @@ package com.Thuefordevs;
 import com.Thuefordevs.Graphix.DrawN;
 
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class Netz {
     //Array mit den Datenpunkten
@@ -239,9 +238,17 @@ public class Netz {
         return this.dp.size();
     }
 
+    /**
+     * gibt die maximale Koordinate x des Netzes zurück
+     * @param x
+     *      int
+     * @return
+     *      double
+     */
     public double getMaxCoordinate(int x) {
         if (x > this.dim) {
             System.err.println("The maximum you can ask for is:" + this.dim);
+            return -1;
         }
         double h = this.dp.get(0).getValues()[x];
         for (DataPoint d : this.dp) {
@@ -252,9 +259,17 @@ public class Netz {
         return h;
     }
 
+    /**
+     * gibt die kleinste Koordinate x des Netzes zurück
+     * @param x
+     *      int
+     * @return
+     *      double
+     */
     public double getMinCoordinate(int x) {
         if (x > this.dim) {
             System.err.println("The maximum you can ask for is:" + this.dim);
+            return -1;
         }
         double h = this.dp.get(0).getValues()[x];
         for (DataPoint d : this.dp) {
@@ -339,7 +354,7 @@ public class Netz {
     }
 
     /**
-     * gibt alle vorhandenen PointClassen zurück
+     * gibt alle vorhandenen und nutzbaren PointClassen zurück
      *
      * @return ArrayList<Integer>
      */
@@ -398,7 +413,18 @@ public class Netz {
         return c;
     }
 
-
+    /**
+     * klassifiziert alle unklassifizierten Punkte mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param k
+     *      int
+     * @param weighted
+     *      boolean
+     * @param funktion
+     *      String
+     */
     public void classify(int k, boolean weighted, String funktion) {
         //soll gewichteter kNN genutzt werden?
         if (weighted) {
@@ -484,14 +510,36 @@ public class Netz {
         }
     }
 
+    /**
+     * klassifiziert alle unklassifizierten Punkte mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param k
+     *      int
+     * @param weighted
+     *      boolean
+     */
     public void classify(int k, boolean weighted) {
         this.classify(k, weighted, "euklid");
     }
 
+    /**
+     * klassifiziert alle unklassifizierten Punkte mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param k
+     *      int
+     */
     public void classify(int k) {
-        this.classify(k, false);
+        this.classify(k, false, "euklid");
     }
 
+    /**
+     * gibt true zurück sobald das gesamte Netz klassifiziert wurde, ansonsten true
+     * @return
+     */
     public boolean isClassified() {
         boolean ret = true;
         for (int i = 0; i < this.dp.size(); i++) {
@@ -502,6 +550,20 @@ public class Netz {
         return ret;
     }
 
+    /**
+     * klassifiziert den gegebenen Punkt dp mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param dp
+     *      DataPoint
+     * @param k
+     *      int
+     * @param weighted
+     *      boolean
+     * @param funktion
+     *      String
+     */
     public int classifyPoint(DataPoint dp, int k, boolean weighted, String funktion) {
         if (weighted) {
 
@@ -562,10 +624,32 @@ public class Netz {
         }
     }
 
+    /**
+     * klassifiziert den gegebenen Punkt dp mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param dp
+     *      DataPoint
+     * @param k
+     *      int
+     * @param weighted
+     *      boolean
+     */
     public int classifyPoint(DataPoint dp, int k, boolean weighted){
         return classifyPoint(dp, k, weighted, "euklid");
     }
 
+    /**
+     * klassifiziert den gegebenen Punkt dp mit den vorhandenen bereits klassifizierten Punkten
+     * k ist die Anzahl der nächsten Nachbarn
+     * weighted - soll der gewichtete klassifikator verwendet werden
+     * funktion - zu benutzende Distanzfunktion
+     * @param dp
+     *      DataPoint
+     * @param k
+     *      int
+     */
     public int classifyPoint(DataPoint dp, int k){
         return classifyPoint(dp, k, false, "euklid");
     }
